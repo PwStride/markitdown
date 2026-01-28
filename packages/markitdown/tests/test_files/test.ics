@@ -1,0 +1,45 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Test Calendar//EN
+X-WR-CALNAME:Team Project Calendar
+BEGIN:VEVENT
+DTSTART:20250315T100000Z
+DTEND:20250315T113000Z
+SUMMARY:Sprint Planning Meeting
+LOCATION:Conference Room 4B\, 123 Main St\, Building A
+ORGANIZER;CN=Jane Smith:mailto:jane.smith@example.com
+ATTENDEE;CN=Bob Johnson;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED:mailto:bob.johnson@example.com
+ATTENDEE;CN=Alice Wong;ROLE=OPT-PARTICIPANT;PARTSTAT=TENTATIVE:mailto:alice.wong@example.com
+ATTENDEE;CN=Charlie Davis;ROLE=REQ-PARTICIPANT;PARTSTAT=DECLINED:mailto:charlie.davis@example.com
+DESCRIPTION:Quarterly sprint planning session to align on project milestones\nand resource allocation for Q2.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20250320T140000Z
+DTEND:20250320T153000Z
+SUMMARY:Product Roadmap Review
+LOCATION:Virtual - Zoom Meeting Room
+ORGANIZER;CN=Diana Prince:mailto:diana.prince@example.com
+ATTENDEE;CN=Bob Johnson;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED:mailto:bob.johnson@example.com
+ATTENDEE;CN=Frank Miller;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION:mailto:frank.miller@example.com
+DESCRIPTION:Review the current product roadmap and discuss upcoming feature priorities.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20250401T090000Z
+DTEND:20250401T100000Z
+SUMMARY:Team Lunch Outing
+LOCATION:Rosewood Bistro\, 456 Oak Avenue
+ORGANIZER;CN=Alice Wong:mailto:alice.wong@example.com
+ATTENDEE;CN=Bob Johnson;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED:mailto:bob.johnson@example.com
+ATTENDEE;CN=Jane Smith;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED:mailto:jane.smith@example.com
+ATTENDEE;CN=Charlie Davis;ROLE=REQ-PARTICIPANT;PARTSTAT=TENTATIVE:mailto:charlie.davis@example.com
+DESCRIPTION:Monthly team lunch to strengthen collaboration.
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20250410T160000Z
+DTEND:20250410T170000Z
+SUMMARY:Remote Check-In
+ORGANIZER;CN=Bob Johnson:mailto:bob.johnson@example.com
+ATTENDEE;CN=Jane Smith;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED:mailto:jane.smith@example.com
+DESCRIPTION:Weekly async check-in for remote team members.
+END:VEVENT
+END:VCALENDAR

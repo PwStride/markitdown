@@ -22,25 +22,18 @@ def main():
                 markitdown <OPTIONAL: FILENAME>
                 If FILENAME is empty, markitdown reads from stdin.
 
-            EXAMPLE:
+            CONVERT TO MARKDOWN:
 
                 markitdown example.pdf
-
-                OR
-
+                markitdown example.pdf -o output.md
                 cat example.pdf | markitdown
 
-                OR
+            GENERATE SITEMAP PREVIEW:
 
-                markitdown < example.pdf
-
-                OR to save to a file use
-
-                markitdown example.pdf -o example.md
-
-                OR
-
-                markitdown example.pdf > example.md
+                markitdown --sitemap example.pdf
+                markitdown --sitemap example.pdf -o preview.json
+                markitdown --sitemap --sitemap-format text example.pdf
+                markitdown --sitemap --sitemap-format text example.pdf -o preview.txt
             """
         ).strip(),
     )
@@ -108,6 +101,20 @@ def main():
         "--keep-data-uris",
         action="store_true",
         help="Keep data URIs (like base64-encoded images) in the output. By default, data URIs are truncated.",
+    )
+
+    parser.add_argument(
+        "-s",
+        "--sitemap",
+        action="store_true",
+        help="Output a JSON sitemap preview (table of contents) instead of converting the file to Markdown.",
+    )
+
+    parser.add_argument(
+        "--sitemap-format",
+        choices=["json", "text"],
+        default="json",
+        help="Output format for --sitemap preview: 'json' (default) or 'text' for human-readable summary.",
     )
 
     parser.add_argument("filename", nargs="?")
@@ -185,6 +192,17 @@ def main():
         )
     else:
         markitdown = MarkItDown(enable_plugins=args.use_plugins)
+
+    if args.sitemap:
+        if args.filename is None:
+            _exit_with_error("Filename is required when using --sitemap.")
+        markitdown.write_sitemap_preview(
+            args.filename,
+            output=args.output,
+            stream_info=stream_info,
+            fmt=args.sitemap_format,
+        )
+        sys.exit(0)
 
     if args.filename is None:
         result = markitdown.convert_stream(

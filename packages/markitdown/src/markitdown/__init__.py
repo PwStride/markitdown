@@ -17,6 +17,9 @@ from ._exceptions import (
     FileConversionException,
     UnsupportedFormatException,
 )
+from ._sitemap_preview import SitemapPreviewResult, SectionPreview, MediaItem
+from ._sitemap_preview_converter import SitemapPreviewConverter
+from ._sitemap_preview_writer import SitemapPreviewWriter
 
 __all__ = [
     "__version__",
@@ -31,4 +34,9 @@ __all__ = [
     "StreamInfo",
     "PRIORITY_SPECIFIC_FILE_FORMAT",
     "PRIORITY_GENERIC_FILE_FORMAT",
+    "SitemapPreviewResult",
+    "SectionPreview",
+    "MediaItem",
+    "SitemapPreviewConverter",
+    "SitemapPreviewWriter",
 ]

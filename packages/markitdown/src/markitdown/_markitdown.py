@@ -43,6 +43,9 @@ from .converters import (
 )
 
 from ._base_converter import DocumentConverter, DocumentConverterResult
+from ._sitemap_preview import SitemapPreviewResult
+from ._sitemap_preview_converter import SitemapPreviewConverter
+from ._sitemap_preview_writer import SitemapPreviewWriter
 
 from ._exceptions import (
     FileConversionException,
@@ -776,3 +779,138 @@ class MarkItDown:
             return codecs.lookup(charset).name
         except LookupError:
             return charset
+
+    def generate_sitemap_preview(
+        self,
+        source: Union[str, Path, BinaryIO],
+        *,
+        stream_info: Optional[StreamInfo] = None,
+        **kwargs: Any,
+    ) -> SitemapPreviewResult:
+        """Generate a JSON-formatted sitemap preview (table of contents) for a document.
+
+        The preview includes:
+        - File type and detected subject
+        - Approximate total token count
+        - A conversion-confidence score (0-100) estimating how cleanly the
+          file can be converted to Markdown
+        - Per-section summaries with associated page numbers
+        - A listing of every image and table found, with one-sentence
+          descriptions
+
+        Args:
+            source: A local file path (str or Path) or an already-opened
+                binary stream.  HTTP URLs are not supported here -- download
+                the file first and pass the local path or stream.
+            stream_info: Optional StreamInfo to supply or override detected
+                metadata (mimetype, extension, charset, etc.).
+
+        Returns:
+            A SitemapPreviewResult instance.  Call .to_json() to get a
+            pretty-printed JSON string, or .to_dict() for a plain dict.
+        """
+        preview_converter = SitemapPreviewConverter()
+
+        if isinstance(source, (str, Path)):
+            path = str(source)
+            base_guess = StreamInfo(
+                local_path=path,
+                extension=os.path.splitext(path)[1],
+                filename=os.path.basename(path),
+            )
+            if stream_info is not None:
+                base_guess = base_guess.copy_and_update(stream_info)
+
+            with open(path, "rb") as fh:
+                guesses = self._get_stream_info_guesses(
+                    file_stream=fh, base_guess=base_guess
+                )
+                best_info = guesses[0] if guesses else base_guess
+                return preview_converter.generate(fh, best_info, **kwargs)
+
+        elif hasattr(source, "read") and callable(source.read):
+            if not source.seekable():
+                buffer = io.BytesIO()
+                while True:
+                    chunk = source.read(4096)
+                    if not chunk:
+                        break
+                    buffer.write(chunk)
+                buffer.seek(0)
+                source = buffer
+
+            base_guess = stream_info if stream_info is not None else StreamInfo()
+            guesses = self._get_stream_info_guesses(
+                file_stream=source, base_guess=base_guess
+            )
+            best_info = guesses[0] if guesses else base_guess
+            return preview_converter.generate(source, best_info, **kwargs)
+
+        else:
+            raise TypeError(
+                f"Invalid source type: {type(source)}. "
+                "Expected a file path (str/Path) or a binary stream (BinaryIO)."
+            )
+
+    def write_sitemap_preview(
+        self,
+        source: Union[str, Path, BinaryIO],
+        output: Union[str, None] = None,
+        *,
+        stream_info: Optional[StreamInfo] = None,
+        fmt: str = "json",
+        indent: int = 2,
+        **kwargs: Any,
+    ) -> str:
+        """Generate a sitemap preview and write it to a destination in one step.
+
+        This is a convenience method that combines ``generate_sitemap_preview``
+        and ``SitemapPreviewWriter.write`` into a single call, giving users a
+        straightforward way to produce a preview output file.
+
+        Equivalent CLI usage::
+
+            # JSON preview to stdout
+            markitdown --sitemap example.pdf
+
+            # JSON preview saved to a file
+            markitdown --sitemap example.pdf -o preview.json
+
+            # Human-readable text preview
+            markitdown --sitemap --sitemap-format text example.pdf
+
+            # Text preview saved to a file
+            markitdown --sitemap --sitemap-format text example.pdf -o preview.txt
+
+        Python API usage::
+
+            md = MarkItDown()
+
+            # JSON preview to stdout
+            md.write_sitemap_preview("example.pdf")
+
+            # JSON preview to file
+            md.write_sitemap_preview("example.pdf", "preview.json")
+
+            # Human-readable text to file
+            md.write_sitemap_preview("example.pdf", "preview.txt", fmt="text")
+
+        Args:
+            source: A local file path (str or Path) or an already-opened
+                binary stream.
+            output: Where to write the preview.  Accepts:
+                - A file path (str) -- writes to that file.
+                - ``None`` -- writes to ``sys.stdout``.
+            stream_info: Optional StreamInfo to supply or override detected
+                metadata (mimetype, extension, charset, etc.).
+            fmt: Output format -- ``"json"`` (default) or ``"text"``.
+            indent: JSON indentation level (only used when *fmt* is ``"json"``).
+
+        Returns:
+            The formatted output string (same content that was written).
+        """
+        preview = self.generate_sitemap_preview(
+            source, stream_info=stream_info, **kwargs
+        )
+        writer = SitemapPreviewWriter()
+        return writer.write(preview, output, fmt=fmt, indent=indent)

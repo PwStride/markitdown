@@ -20,6 +20,7 @@ from ._exceptions import (
 from ._sitemap_preview import SitemapPreviewResult, SectionPreview, MediaItem
 from ._sitemap_preview_converter import SitemapPreviewConverter
 from ._sitemap_preview_writer import SitemapPreviewWriter
+from ._preview_style import STYLE_CLASSIC, STYLE_MONO, DEFAULT_STYLE, STYLES, resolve_style
 
 __all__ = [
     "__version__",
@@ -39,4 +40,9 @@ __all__ = [
     "MediaItem",
     "SitemapPreviewConverter",
     "SitemapPreviewWriter",
+    "STYLE_CLASSIC",
+    "STYLE_MONO",
+    "DEFAULT_STYLE",
+    "STYLES",
+    "resolve_style",
 ]

@@ -257,6 +257,7 @@ def main():
             output=args.output,
             stream_info=stream_info,
             fmt=args.sitemap_format,
+            preview_style="mono",
         )
         sys.exit(0)
 

@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from ._markdownify import _CustomMarkdownify
 from .._stream_info import StreamInfo
 from .._base_converter import DocumentConverter, DocumentConverterResult
+from .._mono_format import h1, h2, meta
 
 PRECISE_MIME_TYPE_PREFIXES = [
     "application/rss",
@@ -107,7 +108,7 @@ class RssConverter(DocumentConverter):
         title = self._get_data_by_tag_name(root, "title")
         subtitle = self._get_data_by_tag_name(root, "subtitle")
         entries = root.getElementsByTagName("entry")
-        md_text = f"# {title}\n"
+        md_text = h1(title) if title else ""
         if subtitle:
             md_text += f"{subtitle}\n"
         for entry in entries:
@@ -117,9 +118,9 @@ class RssConverter(DocumentConverter):
             entry_content = self._get_data_by_tag_name(entry, "content")
 
             if entry_title:
-                md_text += f"\n## {entry_title}\n"
+                md_text += "\n" + h2(entry_title)
             if entry_updated:
-                md_text += f"Updated on: {entry_updated}\n"
+                md_text += meta("Updated on", entry_updated)
             if entry_summary:
                 md_text += self._parse_content(entry_summary)
             if entry_content:
@@ -143,8 +144,9 @@ class RssConverter(DocumentConverter):
         channel_title = self._get_data_by_tag_name(channel, "title")
         channel_description = self._get_data_by_tag_name(channel, "description")
         items = channel.getElementsByTagName("item")
+        md_text = ""
         if channel_title:
-            md_text = f"# {channel_title}\n"
+            md_text = h1(channel_title)
         if channel_description:
             md_text += f"{channel_description}\n"
         for item in items:
@@ -154,9 +156,9 @@ class RssConverter(DocumentConverter):
             content = self._get_data_by_tag_name(item, "content:encoded")
 
             if title:
-                md_text += f"\n## {title}\n"
+                md_text += "\n" + h2(title)
             if pubDate:
-                md_text += f"Published on: {pubDate}\n"
+                md_text += meta("Published on", pubDate)
             if description:
                 md_text += self._parse_content(description)
             if content:

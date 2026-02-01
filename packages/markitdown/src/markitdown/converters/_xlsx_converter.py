@@ -4,6 +4,7 @@ from ._html_converter import HtmlConverter
 from .._base_converter import DocumentConverter, DocumentConverterResult
 from .._exceptions import MissingDependencyException, MISSING_DEPENDENCY_MESSAGE
 from .._stream_info import StreamInfo
+from .._mono_format import h2
 
 # Try loading optional (but in this case, required) dependencies
 # Save reporting of any exceptions for later
@@ -83,7 +84,7 @@ class XlsxConverter(DocumentConverter):
         sheets = pd.read_excel(file_stream, sheet_name=None, engine="openpyxl")
         md_content = ""
         for s in sheets:
-            md_content += f"## {s}\n"
+            md_content += h2(s)
             html_content = sheets[s].to_html(index=False)
             md_content += (
                 self._html_converter.convert_string(
@@ -145,7 +146,7 @@ class XlsConverter(DocumentConverter):
         sheets = pd.read_excel(file_stream, sheet_name=None, engine="xlrd")
         md_content = ""
         for s in sheets:
-            md_content += f"## {s}\n"
+            md_content += h2(s)
             html_content = sheets[s].to_html(index=False)
             md_content += (
                 self._html_converter.convert_string(

@@ -4,6 +4,7 @@ import mimetypes
 from ._exiftool import exiftool_metadata
 from .._base_converter import DocumentConverter, DocumentConverterResult
 from .._stream_info import StreamInfo
+from .._mono_format import h1, meta
 
 ACCEPTED_MIME_TYPE_PREFIXES = [
     "image/jpeg",
@@ -63,7 +64,7 @@ class ImageConverter(DocumentConverter):
                 "GPSPosition",
             ]:
                 if f in metadata:
-                    md_content += f"{f}: {metadata[f]}\n"
+                    md_content += meta(f, metadata[f])
 
         # Try describing the image with GPT
         llm_client = kwargs.get("llm_client")
@@ -78,7 +79,7 @@ class ImageConverter(DocumentConverter):
             )
 
             if llm_description is not None:
-                md_content += "\n# Description:\n" + llm_description.strip() + "\n"
+                md_content += "\n" + h1("Description:") + llm_description.strip() + "\n"
 
         return DocumentConverterResult(
             markdown=md_content,

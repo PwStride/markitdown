@@ -13,6 +13,7 @@ from ._llm_caption import llm_caption
 from .._base_converter import DocumentConverter, DocumentConverterResult
 from .._stream_info import StreamInfo
 from .._exceptions import MissingDependencyException, MISSING_DEPENDENCY_MESSAGE
+from .._mono_format import h1, h3
 
 # Try loading optional (but in this case, required) dependencies
 # Save reporting of any exceptions for later
@@ -162,7 +163,7 @@ class PptxConverter(DocumentConverter):
                 # Text areas
                 elif shape.has_text_frame:
                     if shape == title:
-                        md_content += "# " + shape.text.lstrip() + "\n"
+                        md_content += h1(shape.text.lstrip())
                     else:
                         md_content += shape.text + "\n"
 
@@ -191,7 +192,7 @@ class PptxConverter(DocumentConverter):
             md_content = md_content.strip()
 
             if slide.has_notes_slide:
-                md_content += "\n\n### Notes:\n"
+                md_content += "\n\n" + h3("Notes:")
                 notes_frame = slide.notes_slide.notes_text_frame
                 if notes_frame is not None:
                     md_content += notes_frame.text
@@ -234,10 +235,10 @@ class PptxConverter(DocumentConverter):
 
     def _convert_chart_to_markdown(self, chart):
         try:
-            md = "\n\n### Chart"
+            chart_label = "Chart"
             if chart.has_title:
-                md += f": {chart.chart_title.text_frame.text}"
-            md += "\n\n"
+                chart_label += f": {chart.chart_title.text_frame.text}"
+            md = "\n\n" + h3(chart_label) + "\n"
             data = []
             category_names = [c.label for c in chart.plots[0].categories]
             series_names = [s.name for s in chart.series]

@@ -7,6 +7,7 @@ from typing import BinaryIO, Any, TYPE_CHECKING
 from .._base_converter import DocumentConverter, DocumentConverterResult
 from .._stream_info import StreamInfo
 from .._exceptions import UnsupportedFormatException, FileConversionException
+from .._mono_format import h2
 
 # Break otherwise circular import for type hinting
 if TYPE_CHECKING:
@@ -106,7 +107,7 @@ class ZipConverter(DocumentConverter):
                         stream_info=z_file_stream_info,
                     )
                     if result is not None:
-                        md_content += f"## File: {name}\n\n"
+                        md_content += h2(f"File: {name}") + "\n"
                         md_content += result.markdown + "\n\n"
                 except UnsupportedFormatException:
                     pass

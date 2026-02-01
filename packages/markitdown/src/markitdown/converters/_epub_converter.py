@@ -8,6 +8,7 @@ from typing import BinaryIO, Any, Dict, List
 from ._html_converter import HtmlConverter
 from .._base_converter import DocumentConverterResult
 from .._stream_info import StreamInfo
+from .._mono_format import meta
 
 ACCEPTED_MIME_TYPE_PREFIXES = [
     "application/epub",
@@ -121,7 +122,7 @@ class EpubConverter(HtmlConverter):
                 if isinstance(value, list):
                     value = ", ".join(value)
                 if value:
-                    metadata_markdown.append(f"**{key.capitalize()}:** {value}")
+                    metadata_markdown.append(meta(key.capitalize(), value).rstrip("\n"))
 
             markdown_content.insert(0, "\n".join(metadata_markdown))
 

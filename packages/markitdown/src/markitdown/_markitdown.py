@@ -860,6 +860,7 @@ class MarkItDown:
         stream_info: Optional[StreamInfo] = None,
         fmt: str = "json",
         indent: int = 2,
+        preview_style: str = "mono",
         **kwargs: Any,
     ) -> str:
         """Generate a sitemap preview and write it to a destination in one step.
@@ -876,7 +877,7 @@ class MarkItDown:
             # JSON preview saved to a file
             markitdown --sitemap example.pdf -o preview.json
 
-            # Human-readable text preview
+            # Human-readable text preview (classic layout)
             markitdown --sitemap --sitemap-format text example.pdf
 
             # Text preview saved to a file
@@ -892,8 +893,12 @@ class MarkItDown:
             # JSON preview to file
             md.write_sitemap_preview("example.pdf", "preview.json")
 
-            # Human-readable text to file
+            # Human-readable text to file  (mono layout, the default)
             md.write_sitemap_preview("example.pdf", "preview.txt", fmt="text")
+
+            # Human-readable text with the original classic layout
+            md.write_sitemap_preview("example.pdf", "preview.txt",
+                                     fmt="text", preview_style="classic")
 
         Args:
             source: A local file path (str or Path) or an already-opened
@@ -905,6 +910,12 @@ class MarkItDown:
                 metadata (mimetype, extension, charset, etc.).
             fmt: Output format -- ``"json"`` (default) or ``"text"``.
             indent: JSON indentation level (only used when *fmt* is ``"json"``).
+            preview_style: Visual style for text output.  ``"mono"``
+                (default) uses the minimalist layout with bold violet
+                accent and colour-coded confidence badges.  Pass
+                ``"classic"`` to revert to the original plain-ASCII
+                layout.  Ignored when *fmt* is ``"json"``.  Custom styles
+                can be registered via ``markitdown._preview_style.STYLES``.
 
         Returns:
             The formatted output string (same content that was written).
@@ -913,4 +924,4 @@ class MarkItDown:
             source, stream_info=stream_info, **kwargs
         )
         writer = SitemapPreviewWriter()
-        return writer.write(preview, output, fmt=fmt, indent=indent)
+        return writer.write(preview, output, fmt=fmt, indent=indent, preview_style=preview_style)

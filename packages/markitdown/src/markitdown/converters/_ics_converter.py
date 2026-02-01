@@ -4,6 +4,7 @@ from datetime import datetime, date, timedelta
 
 from .._base_converter import DocumentConverter, DocumentConverterResult
 from .._stream_info import StreamInfo
+from .._mono_format import h1, h2, h3, bullet, meta
 
 ACCEPTED_MIME_TYPE_PREFIXES = [
     "text/calendar",
@@ -154,7 +155,7 @@ class IcsConverter(DocumentConverter):
         sections: List[str] = []
 
         if cal_title:
-            sections.append(f"# {cal_title}\n")
+            sections.append(h1(cal_title))
 
         for event in events:
             event_sections: List[str] = []
@@ -162,7 +163,7 @@ class IcsConverter(DocumentConverter):
             # Title (SUMMARY)
             title = _get_text(event, "SUMMARY")
             if title:
-                event_sections.append(f"## {title}\n")
+                event_sections.append(h2(title))
 
             # Date / Time
             date_lines: List[str] = []
@@ -171,19 +172,19 @@ class IcsConverter(DocumentConverter):
             duration = event.get("DURATION")
 
             if dtstart:
-                date_lines.append(f"**Start:** {_format_datetime(dtstart.dt)}")
+                date_lines.append(meta("Start", _format_datetime(dtstart.dt)))
             if dtend:
-                date_lines.append(f"**End:** {_format_datetime(dtend.dt)}")
+                date_lines.append(meta("End", _format_datetime(dtend.dt)))
             if duration:
-                date_lines.append(f"**Duration:** {_format_datetime(duration.dt)}")
+                date_lines.append(meta("Duration", _format_datetime(duration.dt)))
 
             if date_lines:
-                event_sections.append("### Date and Time\n")
-                event_sections.append("\n".join(date_lines) + "\n")
+                event_sections.append(h3("Date and Time"))
+                event_sections.append("".join(date_lines))
 
             # Location
             location = _get_text(event, "LOCATION")
-            event_sections.append("### Location\n")
+            event_sections.append(h3("Location"))
             event_sections.append(f"{location}\n" if location else "No location specified\n")
 
             # Organizer
@@ -194,21 +195,21 @@ class IcsConverter(DocumentConverter):
                 org_cn = org_params.get("CN", "")
                 org_display = f"{org_cn} <{org_address}>" if org_cn else org_address
 
-                event_sections.append("### Organizer\n")
+                event_sections.append(h3("Organizer"))
                 event_sections.append(f"{org_display}\n")
 
             # Attendees
             attendees = _get_attendees(event)
             if attendees:
-                event_sections.append("### Attendees\n")
+                event_sections.append(h3("Attendees"))
                 event_sections.append(
-                    "\n".join(f"- {a}" for a in attendees) + "\n"
+                    "".join(bullet(a) for a in attendees)
                 )
 
             # Description
             description = _get_text(event, "DESCRIPTION")
             if description:
-                event_sections.append("### Description\n")
+                event_sections.append(h3("Description"))
                 event_sections.append(f"{description}\n")
 
             if event_sections:

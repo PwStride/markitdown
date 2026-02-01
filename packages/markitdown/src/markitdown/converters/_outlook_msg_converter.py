@@ -3,6 +3,7 @@ from typing import Any, Union, BinaryIO
 from .._stream_info import StreamInfo
 from .._base_converter import DocumentConverter, DocumentConverterResult
 from .._exceptions import MissingDependencyException, MISSING_DEPENDENCY_MESSAGE
+from .._mono_format import h1, h2, meta
 
 # Try loading optional (but in this case, required) dependencies
 # Save reporting of any exceptions for later
@@ -96,7 +97,7 @@ class OutlookMsgConverter(DocumentConverter):
         msg = olefile.OleFileIO(file_stream)
 
         # Extract email metadata
-        md_content = "# Email Message\n\n"
+        md_content = h1("Email Message") + "\n"
 
         # Get headers
         headers = {
@@ -108,9 +109,9 @@ class OutlookMsgConverter(DocumentConverter):
         # Add headers to markdown
         for key, value in headers.items():
             if value:
-                md_content += f"**{key}:** {value}\n"
+                md_content += meta(key, value)
 
-        md_content += "\n## Content\n\n"
+        md_content += "\n" + h2("Content") + "\n"
 
         # Get email body
         body = self._get_stream_data(msg, "__substg1.0_1000001F")

@@ -7,6 +7,7 @@ from urllib.parse import parse_qs, urlparse, unquote
 
 from .._base_converter import DocumentConverter, DocumentConverterResult
 from .._stream_info import StreamInfo
+from .._mono_format import h1, h2, h3, bullet
 
 # Optional YouTube transcription support
 try:
@@ -116,33 +117,33 @@ class YouTubeConverter(DocumentConverter):
             pass
 
         # Start preparing the page
-        webpage_text = "# YouTube\n"
+        webpage_text = h1("YouTube")
 
         title = self._get(metadata, ["title", "og:title", "name"])  # type: ignore
         assert isinstance(title, str)
 
         if title:
-            webpage_text += f"\n## {title}\n"
+            webpage_text += "\n" + h2(title)
 
         stats = ""
         views = self._get(metadata, ["interactionCount"])  # type: ignore
         if views:
-            stats += f"- **Views:** {views}\n"
+            stats += bullet(f"**Views:** {views}")
 
         keywords = self._get(metadata, ["keywords"])  # type: ignore
         if keywords:
-            stats += f"- **Keywords:** {keywords}\n"
+            stats += bullet(f"**Keywords:** {keywords}")
 
         runtime = self._get(metadata, ["duration"])  # type: ignore
         if runtime:
-            stats += f"- **Runtime:** {runtime}\n"
+            stats += bullet(f"**Runtime:** {runtime}")
 
         if len(stats) > 0:
-            webpage_text += f"\n### Video Metadata\n{stats}\n"
+            webpage_text += "\n" + h3("Video Metadata") + stats + "\n"
 
         description = self._get(metadata, ["description", "og:description"])  # type: ignore
         if description:
-            webpage_text += f"\n### Description\n{description}\n"
+            webpage_text += "\n" + h3("Description") + description + "\n"
 
         if IS_YOUTUBE_TRANSCRIPT_CAPABLE:
             ytt_api = YouTubeTranscriptApi()
@@ -186,7 +187,7 @@ class YouTubeConverter(DocumentConverter):
                         )
                         transcript_text = " ".join([part.text for part in transcript])
             if transcript_text:
-                webpage_text += f"\n### Transcript\n{transcript_text}\n"
+                webpage_text += "\n" + h3("Transcript") + transcript_text + "\n"
 
         title = title if title else (soup.title.string if soup.title else "")
         assert isinstance(title, str)

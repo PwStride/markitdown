@@ -5,6 +5,7 @@ from ._transcribe_audio import transcribe_audio
 from .._base_converter import DocumentConverter, DocumentConverterResult
 from .._stream_info import StreamInfo
 from .._exceptions import MissingDependencyException
+from .._mono_format import h3, meta
 
 ACCEPTED_MIME_TYPE_PREFIXES = [
     "audio/x-wav",
@@ -73,7 +74,7 @@ class AudioConverter(DocumentConverter):
                 "BitsPerSample",
             ]:
                 if f in metadata:
-                    md_content += f"{f}: {metadata[f]}\n"
+                    md_content += meta(f, metadata[f])
 
         # Figure out the audio format for transcription
         if stream_info.extension == ".wav" or stream_info.mimetype == "audio/x-wav":
@@ -93,7 +94,7 @@ class AudioConverter(DocumentConverter):
             try:
                 transcript = transcribe_audio(file_stream, audio_format=audio_format)
                 if transcript:
-                    md_content += "\n\n### Audio Transcript:\n" + transcript
+                    md_content += "\n\n" + h3("Audio Transcript:") + transcript
             except MissingDependencyException:
                 pass
 

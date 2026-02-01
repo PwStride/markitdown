@@ -17,6 +17,7 @@ class SectionPreview:
     title: str
     page: Optional[int]
     summary: str
+    exclusion_command: Optional[str] = None
 
 
 @dataclass
@@ -37,7 +38,7 @@ class SitemapPreviewResult:
             "total_token_count": self.total_token_count,
             "total_page_count": self.total_page_count,
             "conversion_confidence": self.conversion_confidence,
-            "sections": [{"title": s.title, "page": s.page, "summary": s.summary} for s in self.sections],
+            "sections": [{"title": s.title, "page": s.page, "summary": s.summary, "exclusion_command": s.exclusion_command} for s in self.sections],
             "media": [{"type": m.type, "page": m.page, "description": m.description} for m in self.media],
         }
 

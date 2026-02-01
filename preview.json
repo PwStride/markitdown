@@ -1,9 +1,418 @@
 {
   "file_type": ".txt",
-  "subject": "TST",
-  "total_token_count": 1,
+  "subject": "[Document] Exclusion Feature for MarkItDown",
+  "total_token_count": 1098,
   "total_page_count": 1,
-  "conversion_confidence": 95,
-  "sections": [],
+  "conversion_confidence": 100,
+  "sections": [
+    {
+      "title": "Exclusion Feature for MarkItDown",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Exclusion Feature for MarkItDown\""
+    },
+    {
+      "title": "Overview",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Overview\""
+    },
+    {
+      "title": "How It Works",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"How It Works\""
+    },
+    {
+      "title": "1. Preview Your Document",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"1. Preview Your Document\""
+    },
+    {
+      "title": "SITEMAP PREVIEW",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"SITEMAP PREVIEW\""
+    },
+    {
+      "title": "File type:              .txt",
+      "page": null,
+      "summary": "Subject: Introduction Total page count: 1 Total token count: 56 Conversion confidence: 100%",
+      "exclusion_command": "--exclude \"File type:              .txt\""
+    },
+    {
+      "title": "Subject:                Introduction",
+      "page": null,
+      "summary": "Total page count: 1 Total token count: 56 Conversion confidence: 100%",
+      "exclusion_command": "--exclude \"Subject:                Introduction\""
+    },
+    {
+      "title": "Total page count:       1",
+      "page": null,
+      "summary": "Total token count: 56 Conversion confidence: 100%",
+      "exclusion_command": "--exclude \"Total page count:       1\""
+    },
+    {
+      "title": "Total token count:      56",
+      "page": null,
+      "summary": "Conversion confidence: 100%",
+      "exclusion_command": "--exclude \"Total token count:      56\""
+    },
+    {
+      "title": "TABLE OF CONTENTS",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"TABLE OF CONTENTS\""
+    },
+    {
+      "title": "Section with no body text.",
+      "page": null,
+      "summary": "To exclude: --exclude \"Introduction\" 2. [ --] Background Section with no body text. To exclude: --exclude \"Background\" 3. [ --] Chapter 1",
+      "exclusion_command": "--exclude \"Section with no body text.\""
+    },
+    {
+      "title": "To exclude: --exclude \"Introduction\"",
+      "page": null,
+      "summary": "2. [ --] Background Section with no body text. To exclude: --exclude \"Background\" 3. [ --] Chapter 1 Section with no body text.",
+      "exclusion_command": "--exclude \"To exclude: --exclude \\\"Introduction\\\"\""
+    },
+    {
+      "title": "Section with no body text.",
+      "page": null,
+      "summary": "To exclude: --exclude \"Background\" 3. [ --] Chapter 1 Section with no body text. To exclude: --exclude \"Chapter 1\" 4. [ --] Conclusion",
+      "exclusion_command": "--exclude \"Section with no body text.\""
+    },
+    {
+      "title": "To exclude: --exclude \"Background\"",
+      "page": null,
+      "summary": "3. [ --] Chapter 1 Section with no body text. To exclude: --exclude \"Chapter 1\" 4. [ --] Conclusion Section with no body text.",
+      "exclusion_command": "--exclude \"To exclude: --exclude \\\"Background\\\"\""
+    },
+    {
+      "title": "Section with no body text.",
+      "page": null,
+      "summary": "To exclude: --exclude \"Chapter 1\" 4. [ --] Conclusion Section with no body text. To exclude: --exclude \"Conclusion\"",
+      "exclusion_command": "--exclude \"Section with no body text.\""
+    },
+    {
+      "title": "To exclude: --exclude \"Chapter 1\"",
+      "page": null,
+      "summary": "4. [ --] Conclusion Section with no body text. To exclude: --exclude \"Conclusion\"",
+      "exclusion_command": "--exclude \"To exclude: --exclude \\\"Chapter 1\\\"\""
+    },
+    {
+      "title": "Section with no body text.",
+      "page": null,
+      "summary": "To exclude: --exclude \"Conclusion\"",
+      "exclusion_command": "--exclude \"Section with no body text.\""
+    },
+    {
+      "title": "To exclude: --exclude \"Conclusion\"",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"To exclude: --exclude \\\"Conclusion\\\"\""
+    },
+    {
+      "title": "2. Convert with Exclusions",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"2. Convert with Exclusions\""
+    },
+    {
+      "title": "This command will:",
+      "page": null,
+      "summary": "- Convert the document to Markdown - Exclude \"Chapter 1\" and all its subsections - Exclude \"Conclusion\" and all its subsections - Save the filtered...",
+      "exclusion_command": "--exclude \"This command will:\""
+    },
+    {
+      "title": "3. JSON Preview Format",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"3. JSON Preview Format\""
+    },
+    {
+      "title": "Command Syntax",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Command Syntax\""
+    },
+    {
+      "title": "Preview Commands",
+      "page": null,
+      "summary": "```bash",
+      "exclusion_command": "--exclude \"Preview Commands\""
+    },
+    {
+      "title": "Text format preview",
+      "page": null,
+      "summary": "markitdown --sitemap <file> --sitemap-format text",
+      "exclusion_command": "--exclude \"Text format preview\""
+    },
+    {
+      "title": "JSON format preview (default)",
+      "page": null,
+      "summary": "markitdown --sitemap <file>",
+      "exclusion_command": "--exclude \"JSON format preview (default)\""
+    },
+    {
+      "title": "Save preview to file",
+      "page": null,
+      "summary": "markitdown --sitemap <file> -o preview.json",
+      "exclusion_command": "--exclude \"Save preview to file\""
+    },
+    {
+      "title": "Conversion with Exclusions",
+      "page": null,
+      "summary": "```bash",
+      "exclusion_command": "--exclude \"Conversion with Exclusions\""
+    },
+    {
+      "title": "Single exclusion",
+      "page": null,
+      "summary": "markitdown <file> -o output.md --exclude \"Section Name\"",
+      "exclusion_command": "--exclude \"Single exclusion\""
+    },
+    {
+      "title": "Multiple exclusions",
+      "page": null,
+      "summary": "markitdown <file> -o output.md --exclude \"Section 1\" --exclude \"Section 2\"",
+      "exclusion_command": "--exclude \"Multiple exclusions\""
+    },
+    {
+      "title": "Output to stdout",
+      "page": null,
+      "summary": "markitdown <file> --exclude \"Section Name\"",
+      "exclusion_command": "--exclude \"Output to stdout\""
+    },
+    {
+      "title": "Features",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Features\""
+    },
+    {
+      "title": "1. Section Hierarchy Support",
+      "page": null,
+      "summary": "When you exclude a section, all its subsections are automatically excluded:",
+      "exclusion_command": "--exclude \"1. Section Hierarchy Support\""
+    },
+    {
+      "title": "This will exclude:",
+      "page": null,
+      "summary": "- Chapter 1 - All subsections under Chapter 1 (e.g., Section 1.1, Section 1.2)",
+      "exclusion_command": "--exclude \"This will exclude:\""
+    },
+    {
+      "title": "2. Multiple Exclusions",
+      "page": null,
+      "summary": "You can exclude multiple sections in a single command:",
+      "exclusion_command": "--exclude \"2. Multiple Exclusions\""
+    },
+    {
+      "title": "3. Format Support",
+      "page": null,
+      "summary": "The exclusion feature works with all supported document formats: - PDF (`.pdf`) - DOCX (`.docx`) - PPTX (`.pptx`) - XLSX (`.xlsx`)",
+      "exclusion_command": "--exclude \"3. Format Support\""
+    },
+    {
+      "title": "The exclusion feature works with all supported document formats:",
+      "page": null,
+      "summary": "- PDF (`.pdf`) - DOCX (`.docx`) - PPTX (`.pptx`) - XLSX (`.xlsx`) - XLS (`.xls`)",
+      "exclusion_command": "--exclude \"The exclusion feature works with all supported document formats:\""
+    },
+    {
+      "title": "4. Shell-Safe Quoting",
+      "page": null,
+      "summary": "Section titles with special characters are automatically escaped:",
+      "exclusion_command": "--exclude \"4. Shell-Safe Quoting\""
+    },
+    {
+      "title": "5. Subject/Section Name Separation",
+      "page": null,
+      "summary": "The document subject is formatted distinctly from section titles to prevent conflicts:",
+      "exclusion_command": "--exclude \"5. Subject/Section Name Separation\""
+    },
+    {
+      "title": "Preview shows:",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Preview shows:\""
+    },
+    {
+      "title": "Subject: \"[Document] Introduction\"",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Subject: \\\"[Document] Introduction\\\"\""
+    },
+    {
+      "title": "Sections: [\"Introduction\", \"Chapter 1\"]",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Sections: [\\\"Introduction\\\", \\\"Chapter 1\\\"]\""
+    },
+    {
+      "title": "Result: \"Introduction\" section excluded, other sections kept",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Result: \\\"Introduction\\\" section excluded, other sections kept\""
+    },
+    {
+      "title": "Subject \"[Document] Introduction\" is metadata, not excludable",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Subject \\\"[Document] Introduction\\\" is metadata, not excludable\""
+    },
+    {
+      "title": "Use Cases",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Use Cases\""
+    },
+    {
+      "title": "1. Remove Confidential Sections",
+      "page": null,
+      "summary": "```bash markitdown report.pdf --exclude \"Financial Data\" --exclude \"Internal Notes\" -o public_report.md",
+      "exclusion_command": "--exclude \"1. Remove Confidential Sections\""
+    },
+    {
+      "title": "2. Extract Specific Content",
+      "page": null,
+      "summary": "```bash markitdown book.epub --exclude \"Copyright\" --exclude \"Acknowledgments\" --exclude \"Index\" -o main_content.md",
+      "exclusion_command": "--exclude \"2. Extract Specific Content\""
+    },
+    {
+      "title": "3. Focus on Specific Chapters",
+      "page": null,
+      "summary": "```bash markitdown thesis.docx --exclude \"Abstract\" --exclude \"References\" --exclude \"Appendix\" -o chapters_only.md",
+      "exclusion_command": "--exclude \"3. Focus on Specific Chapters\""
+    },
+    {
+      "title": "4. Remove Boilerplate",
+      "page": null,
+      "summary": "```bash markitdown presentation.pptx --exclude \"Title Slide\" --exclude \"Thank You\" -o slides_content.md",
+      "exclusion_command": "--exclude \"4. Remove Boilerplate\""
+    },
+    {
+      "title": "Technical Details",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Technical Details\""
+    },
+    {
+      "title": "Implementation",
+      "page": null,
+      "summary": "The exclusion feature consists of three main components:",
+      "exclusion_command": "--exclude \"Implementation\""
+    },
+    {
+      "title": "Section Matching",
+      "page": null,
+      "summary": "- **Exact Matching**: Sections are matched by exact title (case-sensitive) - **Hierarchical Removal**: When a section is excluded, all content up to...",
+      "exclusion_command": "--exclude \"Section Matching\""
+    },
+    {
+      "title": "Examples",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Examples\""
+    },
+    {
+      "title": "Example 1: Text Document",
+      "page": null,
+      "summary": "```bash",
+      "exclusion_command": "--exclude \"Example 1: Text Document\""
+    },
+    {
+      "title": "Preview",
+      "page": null,
+      "summary": "markitdown --sitemap document.txt --sitemap-format text",
+      "exclusion_command": "--exclude \"Preview\""
+    },
+    {
+      "title": "Convert excluding specific sections",
+      "page": null,
+      "summary": "markitdown document.txt -o output.md --exclude \"Introduction\" --exclude \"Conclusion\"",
+      "exclusion_command": "--exclude \"Convert excluding specific sections\""
+    },
+    {
+      "title": "Example 2: PDF Document",
+      "page": null,
+      "summary": "```bash",
+      "exclusion_command": "--exclude \"Example 2: PDF Document\""
+    },
+    {
+      "title": "Preview with JSON",
+      "page": null,
+      "summary": "markitdown --sitemap report.pdf -o preview.json",
+      "exclusion_command": "--exclude \"Preview with JSON\""
+    },
+    {
+      "title": "Convert excluding chapters",
+      "page": null,
+      "summary": "markitdown report.pdf -o report.md --exclude \"Chapter 1\" --exclude \"Chapter 5\"",
+      "exclusion_command": "--exclude \"Convert excluding chapters\""
+    },
+    {
+      "title": "Example 3: XLSX Spreadsheet",
+      "page": null,
+      "summary": "```bash",
+      "exclusion_command": "--exclude \"Example 3: XLSX Spreadsheet\""
+    },
+    {
+      "title": "Preview sheets",
+      "page": null,
+      "summary": "markitdown --sitemap data.xlsx --sitemap-format text",
+      "exclusion_command": "--exclude \"Preview sheets\""
+    },
+    {
+      "title": "Convert excluding specific sheets",
+      "page": null,
+      "summary": "markitdown data.xlsx -o data.md --exclude \"Sheet2\" --exclude \"Sheet3\"",
+      "exclusion_command": "--exclude \"Convert excluding specific sheets\""
+    },
+    {
+      "title": "Workflow",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Workflow\""
+    },
+    {
+      "title": "Subject vs Section Names",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Subject vs Section Names\""
+    },
+    {
+      "title": "No Naming Conflicts",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"No Naming Conflicts\""
+    },
+    {
+      "title": "Example",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Example\""
+    },
+    {
+      "title": "Subject: [Document] Introduction",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Subject: [Document] Introduction\""
+    },
+    {
+      "title": "TABLE OF CONTENTS:",
+      "page": null,
+      "summary": "1. Introduction --exclude \"Introduction\" 2. Chapter 1 --exclude \"Chapter 1\" 3. Conclusion --exclude \"Conclusion\"",
+      "exclusion_command": "--exclude \"TABLE OF CONTENTS:\""
+    },
+    {
+      "title": "Notes",
+      "page": null,
+      "summary": "Section with no body text.",
+      "exclusion_command": "--exclude \"Notes\""
+    }
+  ],
   "media": []
 }

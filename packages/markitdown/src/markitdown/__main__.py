@@ -8,6 +8,49 @@ from textwrap import dedent
 from importlib.metadata import entry_points
 from .__about__ import __version__
 from ._markitdown import MarkItDown, StreamInfo, DocumentConverterResult
+import re
+
+
+def _apply_exclusions(markdown: str, exclusions: list) -> str:
+    """Filter out sections from markdown based on exclusion list.
+
+    Args:
+        markdown: The full markdown text
+        exclusions: List of section titles to exclude
+
+    Returns:
+        Filtered markdown with excluded sections removed
+    """
+    if not exclusions:
+        return markdown
+
+    lines = markdown.split('\n')
+    output_lines = []
+    skip_section = False
+    current_heading_level = 0
+
+    for line in lines:
+        # Check if this is a markdown heading
+        heading_match = re.match(r'^(#{1,6})\s+(.+)$', line)
+
+        if heading_match:
+            level = len(heading_match.group(1))
+            title = heading_match.group(2).strip()
+
+            # Check if this heading matches any exclusion
+            if title in exclusions:
+                skip_section = True
+                current_heading_level = level
+                continue
+            elif skip_section and level <= current_heading_level:
+                # We've reached a new section at the same or higher level, stop skipping
+                skip_section = False
+                current_heading_level = 0
+
+        if not skip_section:
+            output_lines.append(line)
+
+    return '\n'.join(output_lines)
 
 
 def main():
@@ -34,6 +77,11 @@ def main():
                 markitdown --sitemap example.pdf -o preview.json
                 markitdown --sitemap --sitemap-format text example.pdf
                 markitdown --sitemap --sitemap-format text example.pdf -o preview.txt
+
+            EXCLUDE SECTIONS FROM OUTPUT:
+
+                markitdown example.txt -o output.md --exclude "Section 1" --exclude "Chapter 2"
+                markitdown --sitemap example.txt  # First, view sections to see what to exclude
             """
         ).strip(),
     )
@@ -115,6 +163,14 @@ def main():
         choices=["json", "text"],
         default="json",
         help="Output format for --sitemap preview: 'json' (default) or 'text' for human-readable summary.",
+    )
+
+    parser.add_argument(
+        "--exclude",
+        action="append",
+        dest="exclusions",
+        metavar="SECTION_TITLE",
+        help="Exclude a section from the output by its title. Can be used multiple times to exclude multiple sections. Use --sitemap to see available section titles.",
     )
 
     parser.add_argument("filename", nargs="?")
@@ -220,13 +276,19 @@ def main():
 
 def _handle_output(args, result: DocumentConverterResult):
     """Handle output to stdout or file"""
+    markdown_output = result.markdown
+
+    # Apply exclusions if specified
+    if hasattr(args, 'exclusions') and args.exclusions:
+        markdown_output = _apply_exclusions(markdown_output, args.exclusions)
+
     if args.output:
         with open(args.output, "w", encoding="utf-8") as f:
-            f.write(result.markdown)
+            f.write(markdown_output)
     else:
         # Handle stdout encoding errors more gracefully
         print(
-            result.markdown.encode(sys.stdout.encoding, errors="replace").decode(
+            markdown_output.encode(sys.stdout.encoding, errors="replace").decode(
                 sys.stdout.encoding
             )
         )

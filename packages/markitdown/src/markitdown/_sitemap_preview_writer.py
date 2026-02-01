@@ -139,6 +139,8 @@ class SitemapPreviewWriter:
                 page_str = f"p.{section.page}" if section.page is not None else "  --"
                 lines.append(f"  {i:>3}. [{page_str:>5}]  {section.title}")
                 lines.append(f"               {section.summary}")
+                if section.exclusion_command:
+                    lines.append(f"               To exclude: {section.exclusion_command}")
         else:
             lines.append("  (no sections detected)")
         lines.append("")

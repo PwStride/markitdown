@@ -123,17 +123,33 @@ def _to_one_sentence(text: str) -> str:
 
 
 def _extract_subject(text: str, title: Optional[str] = None) -> str:
-    """Derive a short subject phrase from the document."""
+    """Derive a short subject phrase from the document.
+
+    The subject is a document-level descriptor and is formatted to be
+    distinct from section titles to avoid exclusion conflicts.
+    """
     if title and title.strip():
-        return _to_one_sentence(title.strip())
+        return f"[Document] {_to_one_sentence(title.strip())}"
 
     for line in text.splitlines():
         stripped = line.lstrip("#").strip()
         if stripped and line.startswith("#"):
-            return _to_one_sentence(stripped)
+            return f"[Document] {_to_one_sentence(stripped)}"
 
     snippet = " ".join(text.split()[:12])
-    return snippet if snippet else "Untitled document"
+    return f"[Document] {snippet}" if snippet else "[Document] Untitled"
+
+
+# ---------------------------------------------------------------------------
+# Exclusion command helper
+# ---------------------------------------------------------------------------
+
+
+def _make_exclusion_command(section_title: str) -> str:
+    """Generate the command-line exclusion argument for a section."""
+    # Escape quotes in the title for shell safety
+    escaped_title = section_title.replace('"', '\\"')
+    return f'--exclude "{escaped_title}"'
 
 
 # ---------------------------------------------------------------------------
@@ -342,7 +358,8 @@ class SitemapPreviewConverter:
 
             if title_text:
                 summary = _to_one_sentence(slide_body) if slide_body else "Slide with no body text."
-                sections.append(SectionPreview(title=title_text, page=slide_num, summary=summary))
+                exclusion_cmd = _make_exclusion_command(title_text)
+                sections.append(SectionPreview(title=title_text, page=slide_num, summary=summary, exclusion_command=exclusion_cmd))
 
         total_slides = len(presentation.slides)
         full_text = " ".join(all_text_parts)
@@ -378,10 +395,12 @@ class SitemapPreviewConverter:
             rows = list(ws.iter_rows(values_only=True))
 
             if not rows:
+                exclusion_cmd = _make_exclusion_command(sheet_name)
                 sections.append(
                     SectionPreview(
                         title=sheet_name, page=sheet_idx,
                         summary=f"Sheet '{sheet_name}' contains no data.",
+                        exclusion_command=exclusion_cmd,
                     )
                 )
                 continue
@@ -393,7 +412,8 @@ class SitemapPreviewConverter:
                 f"with columns: {', '.join(header)}."
             )
 
-            sections.append(SectionPreview(title=sheet_name, page=sheet_idx, summary=summary))
+            exclusion_cmd = _make_exclusion_command(sheet_name)
+            sections.append(SectionPreview(title=sheet_name, page=sheet_idx, summary=summary, exclusion_command=exclusion_cmd))
             media.append(
                 MediaItem(
                     type="table", page=sheet_idx,
@@ -455,7 +475,8 @@ class SitemapPreviewConverter:
                 f"with columns: {', '.join(header)}."
             )
 
-            sections.append(SectionPreview(title=sheet_name, page=sheet_idx, summary=summary))
+            exclusion_cmd = _make_exclusion_command(sheet_name)
+            sections.append(SectionPreview(title=sheet_name, page=sheet_idx, summary=summary, exclusion_command=exclusion_cmd))
             media.append(
                 MediaItem(
                     type="table", page=sheet_idx,
@@ -536,7 +557,8 @@ class SitemapPreviewConverter:
                         chapter_title = filepath.split("/")[-1]
 
                     summary = _to_one_sentence(chapter_text) if chapter_text else "Empty chapter."
-                    sections.append(SectionPreview(title=chapter_title, page=chapter_num, summary=summary))
+                    exclusion_cmd = _make_exclusion_command(chapter_title)
+                    sections.append(SectionPreview(title=chapter_title, page=chapter_num, summary=summary, exclusion_command=exclusion_cmd))
 
                     for img in soup.find_all("img"):
                         alt = (img.get("alt") or "").strip()
@@ -602,7 +624,8 @@ class SitemapPreviewConverter:
             header_str = ", ".join(header)
             summary = _to_one_sentence(f"CSV with {data_count} row(s) and columns: {header_str}.")
 
-            sections.append(SectionPreview(title="Data Table", page=1, summary=summary))
+            exclusion_cmd = _make_exclusion_command("Data Table")
+            sections.append(SectionPreview(title="Data Table", page=1, summary=summary, exclusion_command=exclusion_cmd))
             media.append(
                 MediaItem(
                     type="table", page=1,
@@ -685,7 +708,8 @@ class SitemapPreviewConverter:
                         if heading_text:
                             remaining = source[source.index(line) + len(line):].strip()
                             summary = _to_one_sentence(remaining) if remaining else "Section with no body text."
-                            sections.append(SectionPreview(title=heading_text, page=cell_num, summary=summary))
+                            exclusion_cmd = _make_exclusion_command(heading_text)
+                            sections.append(SectionPreview(title=heading_text, page=cell_num, summary=summary, exclusion_command=exclusion_cmd))
                             break
 
                 for m in re.finditer(r"!\[([^\]]*)\]\(([^)]+)\)", source):
@@ -764,7 +788,8 @@ class SitemapPreviewConverter:
             all_text.append(f"{event_title} -- {body}")
 
             summary = _to_one_sentence(body)
-            sections.append(SectionPreview(title=event_title, page=idx, summary=summary))
+            exclusion_cmd = _make_exclusion_command(event_title)
+            sections.append(SectionPreview(title=event_title, page=idx, summary=summary, exclusion_command=exclusion_cmd))
 
         full_text = "\n".join(all_text)
         confidence = _compute_confidence(".ics", [], sections)
@@ -851,7 +876,8 @@ class SitemapPreviewConverter:
                     sibling_texts.append(sib.get_text(strip=True))
             body = " ".join(sibling_texts)
             summary = _to_one_sentence(body) if body else "Section with no body text."
-            sections.append(SectionPreview(title=heading_text, page=page, summary=summary))
+            exclusion_cmd = _make_exclusion_command(heading_text)
+            sections.append(SectionPreview(title=heading_text, page=page, summary=summary, exclusion_command=exclusion_cmd))
 
         for img in soup.find_all("img"):
             alt = (img.get("alt") or "").strip()
@@ -936,7 +962,8 @@ class SitemapPreviewConverter:
                 body = " ".join(body_parts)
                 summary = _to_one_sentence(body) if body else "Section with no body text."
                 page = _page_for_offset(char_offset)
-                sections.append(SectionPreview(title=title, page=page, summary=summary))
+                exclusion_cmd = _make_exclusion_command(title)
+                sections.append(SectionPreview(title=title, page=page, summary=summary, exclusion_command=exclusion_cmd))
 
             char_offset += len(line) + 1
 

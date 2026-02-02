@@ -46,6 +46,9 @@ from ._base_converter import DocumentConverter, DocumentConverterResult
 from ._sitemap_preview import SitemapPreviewResult
 from ._sitemap_preview_converter import SitemapPreviewConverter
 from ._sitemap_preview_writer import SitemapPreviewWriter
+from ._docx_tree_mapper import DocumentMap
+from ._docx_tree_mapper_converter import DocxTreeMapConverter
+from ._docx_tree_mapper_writer import DocxTreeMapWriter
 
 from ._exceptions import (
     FileConversionException,
@@ -925,3 +928,84 @@ class MarkItDown:
         )
         writer = SitemapPreviewWriter()
         return writer.write(preview, output, fmt=fmt, indent=indent, preview_style=preview_style)
+
+    def generate_document_map(
+        self,
+        source: Union[str, Path, BinaryIO],
+        *,
+        stream_info: Optional[StreamInfo] = None,
+        **kwargs: Any,
+    ) -> "DocumentMap":
+        """Generate a hierarchical document map for a file.
+
+        Delegates to the full ``MarkItDown.convert()`` pipeline to obtain
+        markdown, then parses heading structure into a nested tree.  This
+        ensures every format the main converter supports is automatically
+        mapped, and all pre-processing steps (DOCX ZIP re-packaging,
+        OMML-to-LaTeX, fallback chains) are honoured.
+
+        Section titles become primary branches; the body text beneath each
+        heading is condensed into a detailed summary that appears as the
+        branch annotation.
+
+        Args:
+            source: A local file path (str or Path) or an already-opened
+                binary stream.
+            stream_info: Optional StreamInfo to supply or override detected
+                metadata (mimetype, extension, charset, etc.).
+
+        Returns:
+            A DocumentMap instance.  Call ``.to_json()`` for pretty-printed
+            JSON, or ``.to_dict()`` for a plain dict.
+        """
+        map_converter = DocxTreeMapConverter(self)
+        convert_kwargs = dict(kwargs)
+        if stream_info is not None:
+            convert_kwargs["stream_info"] = stream_info
+        return map_converter.generate(source, **convert_kwargs)
+
+    def write_document_map(
+        self,
+        source: Union[str, Path, BinaryIO],
+        output: Union[str, None] = None,
+        *,
+        stream_info: Optional[StreamInfo] = None,
+        fmt: str = "json",
+        indent: int = 2,
+        preview_style: str = "tree",
+        **kwargs: Any,
+    ) -> str:
+        """Generate a document map and write it to a destination in one step.
+
+        Equivalent CLI usage::
+
+            # JSON document map to stdout
+            markitdown --map example.docx
+
+            # JSON document map to a file
+            markitdown --map example.docx -o map.json
+
+            # Human-readable tree to stdout
+            markitdown --map --map-format text example.docx
+
+        Python API usage::
+
+            md = MarkItDown()
+            md.write_document_map("example.docx", fmt="text")
+
+        Args:
+            source: A local file path (str or Path) or a binary stream.
+            output: Where to write (file path str, or None for stdout).
+            stream_info: Optional StreamInfo overrides.
+            fmt: Output format -- ``"json"`` (default) or ``"text"``.
+            indent: JSON indentation level.
+            preview_style: Visual style for text output (default ``"tree"``).
+
+        Returns:
+            The formatted output string.
+        """
+        doc_map = self.generate_document_map(
+            source, stream_info=stream_info, **kwargs
+        )
+        writer = DocxTreeMapWriter()
+        return writer.write(doc_map, output, fmt=fmt, indent=indent, preview_style=preview_style)

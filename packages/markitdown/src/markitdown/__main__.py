@@ -78,6 +78,13 @@ def main():
                 markitdown --sitemap --sitemap-format text example.pdf
                 markitdown --sitemap --sitemap-format text example.pdf -o preview.txt
 
+            GENERATE DOCUMENT MAP (hierarchical tree):
+
+                markitdown --map example.docx
+                markitdown --map example.docx -o map.json
+                markitdown --map --map-format text example.docx
+                markitdown --map --map-format text example.docx -o map.txt
+
             EXCLUDE SECTIONS FROM OUTPUT:
 
                 markitdown example.txt -o output.md --exclude "Section 1" --exclude "Chapter 2"
@@ -163,6 +170,19 @@ def main():
         choices=["json", "text"],
         default="json",
         help="Output format for --sitemap preview: 'json' (default) or 'text' for human-readable summary.",
+    )
+
+    parser.add_argument(
+        "--map",
+        action="store_true",
+        help="Output a hierarchical document map (tree layout) instead of converting the file to Markdown.",
+    )
+
+    parser.add_argument(
+        "--map-format",
+        choices=["json", "text"],
+        default="json",
+        help="Output format for --map document map: 'json' (default) or 'text' for a tree-drawing layout.",
     )
 
     parser.add_argument(
@@ -258,6 +278,18 @@ def main():
             stream_info=stream_info,
             fmt=args.sitemap_format,
             preview_style="mono",
+        )
+        sys.exit(0)
+
+    if args.map:
+        if args.filename is None:
+            _exit_with_error("Filename is required when using --map.")
+        markitdown.write_document_map(
+            args.filename,
+            output=args.output,
+            stream_info=stream_info,
+            fmt=args.map_format,
+            preview_style="tree",
         )
         sys.exit(0)
 

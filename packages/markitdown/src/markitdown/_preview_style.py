@@ -1,12 +1,13 @@
-"""Preview-style registry for sitemap text output.
+"""Preview-style registry for sitemap and document-map text output.
 
-Two built-in styles are shipped.  The active style is selected at render time
-via the ``preview_style`` parameter that flows through
-``write_sitemap_preview`` / ``SitemapPreviewWriter.format``.
+Three built-in styles are shipped.  The active style is selected at render
+time via the ``preview_style`` parameter that flows through
+``write_sitemap_preview`` / ``SitemapPreviewWriter.format`` and
+``write_document_map`` / ``DocxTreeMapWriter.format``.
 
 Built-in styles
 ---------------
-``"classic"`` (default)
+``"classic"`` (default for sitemap)
     The original plain-ASCII layout that ships with MarkItDown.  No colour,
     ``=`` / ``-`` rule lines, indented labels.
 
@@ -30,6 +31,22 @@ Built-in styles
     ========  ===========  =================================================
     violet    ``#8A2BE2``  Section numbers, panel headers, field labels
     slate     ``#708090``  Muted annotation / summary text
+    emerald   ``#2ECC71``  Confidence-score badge when score >= 70
+    amber     ``#F39C12``  Confidence-score badge when 40 <= score < 70
+    rose      ``#E74C3C``  Confidence-score badge when score < 40
+    ========  ===========  =================================================
+
+``"tree"`` (default for document maps)
+    A layout optimised for the hierarchical document-map view.  Uses an
+    indigo accent (``#5B5FC7``) that is visually distinct from the violet
+    used by "mono", making it easy to tell sitemap previews and document
+    maps apart at a glance.
+
+    ========  ===========  =================================================
+    Name      Hex          Purpose
+    ========  ===========  =================================================
+    indigo    ``#5B5FC7``  Tree connectors, panel headers, field labels
+    slate     ``#708090``  Muted summaries and media annotations
     emerald   ``#2ECC71``  Confidence-score badge when score >= 70
     amber     ``#F39C12``  Confidence-score badge when 40 <= score < 70
     rose      ``#E74C3C``  Confidence-score badge when score < 40
@@ -111,12 +128,22 @@ _AMBER = _rgb(243, 156, 18)
 _ROSE = _rgb(231, 76, 60)
 
 # ---------------------------------------------------------------------------
+# Colour palette for "tree"  (distinct from "mono")
+# ---------------------------------------------------------------------------
+# Indigo   #5B5FC7  ->  rgb(91, 95, 199)
+# ---------------------------------------------------------------------------
+
+_INDIGO = _rgb(91, 95, 199)
+
+# ---------------------------------------------------------------------------
 # Style definitions
 # ---------------------------------------------------------------------------
 
 STYLE_CLASSIC = "classic"
 STYLE_MONO = "mono"
+STYLE_TREE = "tree"
 DEFAULT_STYLE = STYLE_MONO  # mono is the active default; pass "classic" to revert
+DEFAULT_MAP_STYLE = STYLE_TREE  # tree is the default for document maps
 
 STYLES: dict = {
     # ------------------------------------------------------------------
@@ -151,6 +178,23 @@ STYLES: dict = {
         "rule_width": 64,
         "header_label": "SITEMAP PREVIEW",
         "toc_label": "TABLE OF CONTENTS",
+        "media_label": "IMAGES & TABLES",
+    },
+    # ------------------------------------------------------------------
+    # tree  -- indigo accent, optimised for hierarchical document maps
+    # ------------------------------------------------------------------
+    STYLE_TREE: {
+        "accent": _INDIGO,
+        "mute": _SLATE,
+        "badge_hi": _EMERALD,
+        "badge_mid": _AMBER,
+        "badge_lo": _ROSE,
+        "reset": _RESET,
+        "rule_top": "\u2500",  # ─  box-drawing horizontal
+        "rule_mid": "\u2500",  # ─  thin line
+        "rule_width": 64,
+        "header_label": "DOCUMENT MAP",
+        "toc_label": "CONTENT TREE",
         "media_label": "IMAGES & TABLES",
     },
 }

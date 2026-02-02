@@ -20,7 +20,10 @@ from ._exceptions import (
 from ._sitemap_preview import SitemapPreviewResult, SectionPreview, MediaItem
 from ._sitemap_preview_converter import SitemapPreviewConverter
 from ._sitemap_preview_writer import SitemapPreviewWriter
-from ._preview_style import STYLE_CLASSIC, STYLE_MONO, DEFAULT_STYLE, STYLES, resolve_style
+from ._docx_tree_mapper import DocumentMap, TreeNode, TreeMediaItem
+from ._docx_tree_mapper_converter import DocxTreeMapConverter
+from ._docx_tree_mapper_writer import DocxTreeMapWriter
+from ._preview_style import STYLE_CLASSIC, STYLE_MONO, STYLE_TREE, DEFAULT_STYLE, DEFAULT_MAP_STYLE, STYLES, resolve_style
 
 __all__ = [
     "__version__",
@@ -40,9 +43,16 @@ __all__ = [
     "MediaItem",
     "SitemapPreviewConverter",
     "SitemapPreviewWriter",
+    "DocumentMap",
+    "TreeNode",
+    "TreeMediaItem",
+    "DocxTreeMapConverter",
+    "DocxTreeMapWriter",
     "STYLE_CLASSIC",
     "STYLE_MONO",
+    "STYLE_TREE",
     "DEFAULT_STYLE",
+    "DEFAULT_MAP_STYLE",
     "STYLES",
     "resolve_style",
 ]

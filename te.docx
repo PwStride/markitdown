@@ -1,0 +1,35 @@
+Task 5 
+HASH : 4c2e01f7229268a5d9f37abb1f18d773be411aaa
+UUID: 7fd8a166-492e-4f9c-a41e-ed1d03ebbc46
+
+Prompt 
+Create a new mapping feature that maps contents in Word Documents by a hierarchal tree layout. Create a map of the contents of the document staged for conversion and include detailed summaries for each section. Organize the tree with clear connections between transitions.  
+A Pros
+- Registers the main DocxTreeMapper, DocxTreeMap, and TreeNode in the __init__.py according to best practices.
+- The structure of the main code is clear with class headers and definitions contained within such as add_child for the TreeNode and map_document for the DocxTreeMapper. 
+- Provides documentation details for how to obtain tree map outputs instructed by using  tree-map and tree-format commands.
+- Creates new _docx_tree_mapper file which imports information from the converter and uses a parent child relationship for branch formation.
+- Maintains JSON output.
+A cons
+- Difficulty recognizing python3-docx prior installation. 
+- Does not successfully produce output files or previews for tree map, although original markitdown conversions remain stable.
+B Pros
+- Builds its own STYLE_TREE and codes in _preview_style.py 
+- Adds generate_document_map to _markitdown.py main initializer code. 
+- Continues to code JSON in the output files. 
+B Cons
+- Multiple errors with callbacks to circular tree map files made between DocxTreeMapper, DocxTreeMap, and TreeNode due to argument errors. 
+Overall
+Model A builds the new map feature by creating a DocxTreeMapper, DocxTreeMap, and TreeNode python files that contain logic to intake, process, and format an output of the tree hierarchal structure. Model B creates similar files in the same fashion, but also creates a unique STYLE_TREE for the map. Both attempt to integrate through basic registration methods such as additions to init and __main__.py. The parent/child relationship used to format the map is logical. However, there are multiple argument errors in the calls during user implementation prompts. Although there are errors when commands for producing map outputs are made, the normal output commands for basic conversions work as intended so the issue is evidently contained within the new feature.  
+
+Prompt 2
+ There are many errors with the calls to the DocxTreeMapper, DocxTreeMap, and TreeNode. This is partly due to the confusion occuring with the python docx module which should be a python3 implementation to match the markitdown codebase framework. Furthermore, ensure the arguments between these files sync with _markitdown.py imports that discuss kwargs.  
+A Pros
+-
+A Cons
+-
+B Pros
+-
+B Cons
+-
+Overall

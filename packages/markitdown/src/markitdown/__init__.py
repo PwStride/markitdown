@@ -24,6 +24,7 @@ from ._docx_tree_mapper import DocumentMap, TreeNode, TreeMediaItem
 from ._docx_tree_mapper_converter import DocxTreeMapConverter
 from ._docx_tree_mapper_writer import DocxTreeMapWriter
 from ._preview_style import STYLE_CLASSIC, STYLE_MONO, STYLE_TREE, DEFAULT_STYLE, DEFAULT_MAP_STYLE, STYLES, resolve_style
+from ._dir_preview import DirectoryPreviewResult, FilePreviewEntry, DirectoryPreviewScanner, DirectoryPreviewWriter, CONVERTIBLE_EXTENSIONS
 
 __all__ = [
     "__version__",
@@ -55,4 +56,9 @@ __all__ = [
     "DEFAULT_MAP_STYLE",
     "STYLES",
     "resolve_style",
+    "DirectoryPreviewResult",
+    "FilePreviewEntry",
+    "DirectoryPreviewScanner",
+    "CONVERTIBLE_EXTENSIONS",
+    "DirectoryPreviewWriter",
 ]

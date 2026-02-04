@@ -49,6 +49,7 @@ from ._sitemap_preview_writer import SitemapPreviewWriter
 from ._docx_tree_mapper import DocumentMap
 from ._docx_tree_mapper_converter import DocxTreeMapConverter
 from ._docx_tree_mapper_writer import DocxTreeMapWriter
+from ._dir_preview import DirectoryPreviewResult, DirectoryPreviewScanner, DirectoryPreviewWriter
 
 from ._exceptions import (
     FileConversionException,
@@ -1009,3 +1010,64 @@ class MarkItDown:
         )
         writer = DocxTreeMapWriter()
         return writer.write(doc_map, output, fmt=fmt, indent=indent, preview_style=preview_style)
+
+    def generate_directory_preview(
+        self,
+        directory: Union[str, Path],
+    ) -> DirectoryPreviewResult:
+        """Scan a directory and generate a preview for every convertible file.
+
+        The scan is non-recursive: only files sitting directly inside
+        *directory* are included.  Files whose extension is not recognised
+        by the sitemap-preview pipeline are silently skipped.  Files are
+        sorted alphabetically by filename.
+
+        Args:
+            directory: Path to the directory to scan.
+
+        Returns:
+            A ``DirectoryPreviewResult`` containing one
+            ``FilePreviewEntry`` per convertible file.  Each entry holds
+            the full ``SitemapPreviewResult`` produced by the existing
+            preview engine, or an error string if generation failed.
+
+        Raises:
+            FileNotFoundError: If *directory* does not exist.
+            NotADirectoryError: If *directory* is not a directory.
+        """
+        scanner = DirectoryPreviewScanner()
+        return scanner.scan(str(directory))
+
+    def write_directory_preview(
+        self,
+        directory: Union[str, Path],
+        output: Union[str, None] = None,
+    ) -> str:
+        """Generate a directory preview and write it as a Markdown document.
+
+        Convenience wrapper that combines ``generate_directory_preview``
+        and ``DirectoryPreviewWriter.write`` into a single call.
+
+        Equivalent CLI usage::
+
+            markitdown --dir-preview ~/Documents
+            markitdown --dir-preview ~/Documents -o preview.md
+
+        Python API usage::
+
+            md = MarkItDown()
+            md.write_directory_preview("~/Documents")
+            md.write_directory_preview("~/Documents", "preview.md")
+
+        Args:
+            directory: Path to the directory to scan.
+            output: Where to write the Markdown.
+                - A file path (str) — writes to that file.
+                - ``None`` — writes to stdout.
+
+        Returns:
+            The rendered Markdown string.
+        """
+        result = self.generate_directory_preview(directory)
+        writer = DirectoryPreviewWriter()
+        return writer.write(result, output)

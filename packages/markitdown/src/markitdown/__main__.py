@@ -85,6 +85,11 @@ def main():
                 markitdown --map --map-format text example.docx
                 markitdown --map --map-format text example.docx -o map.txt
 
+            GENERATE DIRECTORY PREVIEW (markdown summary of all convertible docs):
+
+                markitdown --dir-preview ~/Documents
+                markitdown --dir-preview ~/Documents -o preview.md
+
             EXCLUDE SECTIONS FROM OUTPUT:
 
                 markitdown example.txt -o output.md --exclude "Section 1" --exclude "Chapter 2"
@@ -193,6 +198,13 @@ def main():
         help="Exclude a section from the output by its title. Can be used multiple times to exclude multiple sections. Use --sitemap to see available section titles.",
     )
 
+    parser.add_argument(
+        "-D",
+        "--dir-preview",
+        metavar="DIRECTORY",
+        help="Scan a directory and output a Markdown document previewing every convertible file it contains. Writes to stdout unless -o is specified.",
+    )
+
     parser.add_argument("filename", nargs="?")
     args = parser.parse_args()
 
@@ -290,6 +302,13 @@ def main():
             stream_info=stream_info,
             fmt=args.map_format,
             preview_style="tree",
+        )
+        sys.exit(0)
+
+    if args.dir_preview:
+        markitdown.write_directory_preview(
+            args.dir_preview,
+            output=args.output,
         )
         sys.exit(0)
 

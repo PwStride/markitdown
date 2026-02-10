@@ -25,6 +25,7 @@ from ._docx_tree_mapper_converter import DocxTreeMapConverter
 from ._docx_tree_mapper_writer import DocxTreeMapWriter
 from ._preview_style import STYLE_CLASSIC, STYLE_MONO, STYLE_TREE, DEFAULT_STYLE, DEFAULT_MAP_STYLE, STYLES, resolve_style
 from ._dir_preview import DirectoryPreviewResult, FilePreviewEntry, DirectoryPreviewScanner, DirectoryPreviewWriter, CONVERTIBLE_EXTENSIONS
+from ._search import SearchResult, DocumentSearcher, SearchResultWriter
 
 __all__ = [
     "__version__",
@@ -61,4 +62,7 @@ __all__ = [
     "DirectoryPreviewScanner",
     "CONVERTIBLE_EXTENSIONS",
     "DirectoryPreviewWriter",
+    "SearchResult",
+    "DocumentSearcher",
+    "SearchResultWriter",
 ]

@@ -90,6 +90,11 @@ def main():
                 markitdown --dir-preview ~/Documents
                 markitdown --dir-preview ~/Documents -o preview.md
 
+            SEARCH ACROSS A DIRECTORY (table of matching files and occurrences):
+
+                markitdown --search ~/Documents "hello" "world"
+                markitdown --search ~/Documents "hello" -o results.md
+
             EXCLUDE SECTIONS FROM OUTPUT:
 
                 markitdown example.txt -o output.md --exclude "Section 1" --exclude "Chapter 2"
@@ -205,6 +210,17 @@ def main():
         help="Scan a directory and output a Markdown document previewing every convertible file it contains. Writes to stdout unless -o is specified.",
     )
 
+    parser.add_argument(
+        "--search",
+        nargs="+",
+        metavar=("DIRECTORY", "QUERY"),
+        help="Search every convertible file in DIRECTORY for one or more QUERY terms. "
+             "Results are rendered as a Markdown table showing matched queries, "
+             "occurrence counts, file path, and file name — one row per file. "
+             "Usage: --search <directory> <query> [<query> ...]. "
+             "Writes to stdout unless -o is specified.",
+    )
+
     parser.add_argument("filename", nargs="?")
     args = parser.parse_args()
 
@@ -308,6 +324,21 @@ def main():
     if args.dir_preview:
         markitdown.write_directory_preview(
             args.dir_preview,
+            output=args.output,
+        )
+        sys.exit(0)
+
+    if args.search:
+        if len(args.search) < 2:
+            _exit_with_error(
+                "--search requires a directory followed by at least one query term.\n"
+                "Usage: markitdown --search <directory> <query> [<query> ...]"
+            )
+        search_dir = args.search[0]
+        search_queries = args.search[1:]
+        markitdown.write_search(
+            search_dir,
+            search_queries,
             output=args.output,
         )
         sys.exit(0)

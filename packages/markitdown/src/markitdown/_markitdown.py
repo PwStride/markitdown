@@ -50,6 +50,7 @@ from ._docx_tree_mapper import DocumentMap
 from ._docx_tree_mapper_converter import DocxTreeMapConverter
 from ._docx_tree_mapper_writer import DocxTreeMapWriter
 from ._dir_preview import DirectoryPreviewResult, DirectoryPreviewScanner, DirectoryPreviewWriter
+from ._search import SearchResult, DocumentSearcher, SearchResultWriter
 
 from ._exceptions import (
     FileConversionException,
@@ -1070,4 +1071,61 @@ class MarkItDown:
         """
         result = self.generate_directory_preview(directory)
         writer = DirectoryPreviewWriter()
+        return writer.write(result, output)
+
+    def generate_search(
+        self,
+        directory: Union[str, Path],
+        queries: List[str],
+    ) -> SearchResult:
+        """Search every convertible file in *directory* for *queries*.
+
+        Converts each supported file to Markdown and counts case-insensitive
+        occurrences of every query term.  Files with zero hits are excluded
+        from the result.
+
+        Args:
+            directory: Path to the directory to scan (non-recursive).
+            queries: One or more search terms.
+
+        Returns:
+            A ``SearchResult`` instance.
+        """
+        searcher = DocumentSearcher(self)
+        return searcher.search(str(directory), queries)
+
+    def write_search(
+        self,
+        directory: Union[str, Path],
+        queries: List[str],
+        output: Union[str, None] = None,
+    ) -> str:
+        """Search a directory for queries and write the results as a Markdown table.
+
+        Convenience wrapper combining ``generate_search`` and
+        ``SearchResultWriter.write``.
+
+        Equivalent CLI usage::
+
+            markitdown --search ~/Documents "hello" "world"
+            markitdown --search ~/Documents "hello" -o results.md
+
+        Python API usage::
+
+            md = MarkItDown()
+            md.write_search("~/Documents", ["hello", "world"])
+            md.write_search("~/Documents", ["hello"], "results.md")
+
+        Args:
+            directory: Path to the directory to scan.
+            queries: One or more search terms.
+            output: Where to write the Markdown table.
+                - A file path (str) — writes to that file.
+                - ``None`` — writes to stdout.
+
+        Returns:
+            The rendered Markdown string.
+        """
+        result = self.generate_search(directory, queries)
+        writer = SearchResultWriter()
         return writer.write(result, output)

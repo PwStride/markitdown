@@ -95,6 +95,12 @@ def main():
                 markitdown --search ~/Documents "hello" "world"
                 markitdown --search ~/Documents "hello" -o results.md
 
+            GENERATE KEYWORD INDEX (alphabetical index of every document):
+
+                markitdown --index ~/Documents
+                markitdown --index ~/Documents -o index.txt
+                markitdown --index ~/Documents --index-format json -o index.json
+
             EXCLUDE SECTIONS FROM OUTPUT:
 
                 markitdown example.txt -o output.md --exclude "Section 1" --exclude "Chapter 2"
@@ -221,6 +227,25 @@ def main():
              "Writes to stdout unless -o is specified.",
     )
 
+    parser.add_argument(
+        "-I",
+        "--index",
+        metavar="DIRECTORY",
+        help="Scan a directory and generate a printable alphabetical keyword index of "
+             "every convertible file it contains. Keywords are extracted from headings, "
+             "proper nouns, and high-frequency content words. Each keyword entry lists "
+             "the files in which it appears along with the nearest section heading for "
+             "context. Writes to stdout unless -o is specified.",
+    )
+
+    parser.add_argument(
+        "--index-format",
+        choices=["text", "json"],
+        default="text",
+        help="Output format for --index: 'text' (default) produces a printable "
+             "alphabetical index; 'json' produces a machine-readable dump.",
+    )
+
     parser.add_argument("filename", nargs="?")
     args = parser.parse_args()
 
@@ -340,6 +365,14 @@ def main():
             search_dir,
             search_queries,
             output=args.output,
+        )
+        sys.exit(0)
+
+    if args.index:
+        markitdown.write_index(
+            args.index,
+            output=args.output,
+            fmt=args.index_format,
         )
         sys.exit(0)
 

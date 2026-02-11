@@ -51,6 +51,7 @@ from ._docx_tree_mapper_converter import DocxTreeMapConverter
 from ._docx_tree_mapper_writer import DocxTreeMapWriter
 from ._dir_preview import DirectoryPreviewResult, DirectoryPreviewScanner, DirectoryPreviewWriter
 from ._search import SearchResult, DocumentSearcher, SearchResultWriter
+from ._index import IndexResult, DirectoryIndexBuilder, IndexWriter
 
 from ._exceptions import (
     FileConversionException,
@@ -1129,3 +1130,76 @@ class MarkItDown:
         result = self.generate_search(directory, queries)
         writer = SearchResultWriter()
         return writer.write(result, output)
+
+    def generate_index(
+        self,
+        directory: Union[str, Path],
+    ) -> IndexResult:
+        """Build an alphabetical keyword index for every convertible file in *directory*.
+
+        Converts each supported file to Markdown via the standard pipeline,
+        then extracts keywords using a three-tier heuristic:
+
+        1. Words from markdown headings (highest signal — author-chosen terms)
+        2. Proper nouns and ALL-CAPS acronyms from body text
+        3. High-frequency (3+ occurrences) content words from body text
+
+        The scan is non-recursive: only files sitting directly inside
+        *directory* are included.  Conversion errors are tracked in
+        ``IndexResult.errors`` without aborting the scan.
+
+        Args:
+            directory: Path to the directory to index.
+
+        Returns:
+            An ``IndexResult`` instance.
+
+        Raises:
+            FileNotFoundError: If *directory* does not exist.
+            NotADirectoryError: If *directory* is not a directory.
+        """
+        builder = DirectoryIndexBuilder(self)
+        return builder.build(str(directory))
+
+    def write_index(
+        self,
+        directory: Union[str, Path],
+        output: Union[str, None] = None,
+        *,
+        fmt: str = "text",
+    ) -> str:
+        """Build a keyword index and write it as a formatted document.
+
+        Convenience wrapper combining ``generate_index`` and
+        ``IndexWriter.write`` into a single call.
+
+        When *output* is ``None`` the index is printed to stdout with ANSI
+        colour codes.  When *output* is a file path the file is written
+        without colour codes so the result is clean and printable.
+
+        Equivalent CLI usage::
+
+            markitdown --index ~/Documents
+            markitdown --index ~/Documents -o index.txt
+            markitdown --index ~/Documents --index-format json -o index.json
+
+        Python API usage::
+
+            md = MarkItDown()
+            md.write_index("~/Documents")
+            md.write_index("~/Documents", "index.txt")
+            md.write_index("~/Documents", "index.json", fmt="json")
+
+        Args:
+            directory: Path to the directory to index.
+            output: Where to write the document.
+                - A file path (str) -- writes to that file.
+                - ``None`` -- writes to stdout.
+            fmt: Output format -- ``"text"`` (default) or ``"json"``.
+
+        Returns:
+            The formatted output string.
+        """
+        result = self.generate_index(directory)
+        writer = IndexWriter()
+        return writer.write(result, output, fmt=fmt)

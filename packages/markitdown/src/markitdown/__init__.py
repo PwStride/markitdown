@@ -28,6 +28,7 @@ from ._dir_preview import DirectoryPreviewResult, FilePreviewEntry, DirectoryPre
 from ._search import SearchResult, DocumentSearcher, SearchResultWriter
 from ._index import IndexResult, IndexEntry, IndexFileRef, DirectoryIndexBuilder, IndexWriter
 from ._heatmap import HeatmapEntry, HeatmapResult, HeatmapScanner, HeatmapWriter
+from ._overview import OverviewResult, OverviewFileEntry, OverviewScanner, OverviewWriter
 
 __all__ = [
     "__version__",
@@ -76,4 +77,8 @@ __all__ = [
     "HeatmapResult",
     "HeatmapScanner",
     "HeatmapWriter",
+    "OverviewResult",
+    "OverviewFileEntry",
+    "OverviewScanner",
+    "OverviewWriter",
 ]

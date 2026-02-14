@@ -107,6 +107,12 @@ def main():
                 markitdown --heatmap ~/Documents -o heatmap.txt
                 markitdown --heatmap ~/Documents --heatmap-width 120
 
+            GENERATE DIRECTORY OVERVIEW (combined summaries, tree maps, keywords, heatmap):
+
+                markitdown --overview ~/Documents
+                markitdown --overview ~/Documents -o overview.txt
+                markitdown --overview ~/Documents --overview-width 120
+
             EXCLUDE SECTIONS FROM OUTPUT:
 
                 markitdown example.txt -o output.md --exclude "Section 1" --exclude "Chapter 2"
@@ -271,6 +277,24 @@ def main():
              "Increase this value on wider terminals for larger tiles.",
     )
 
+    parser.add_argument(
+        "--overview",
+        metavar="DIRECTORY",
+        help="Scan a directory and produce a consolidated overview combining "
+             "document summaries, tree maps, a keyword index, and a volume "
+             "heatmap into a single document. Writes to stdout unless -o is "
+             "specified.",
+    )
+
+    parser.add_argument(
+        "--overview-width",
+        type=int,
+        default=80,
+        metavar="COLS",
+        help="Target terminal width in columns for the overview layout (default: 80). "
+             "Affects the heatmap tile sizing within the overview.",
+    )
+
     parser.add_argument("filename", nargs="?")
     args = parser.parse_args()
 
@@ -406,6 +430,14 @@ def main():
             args.heatmap,
             output=args.output,
             terminal_width=args.heatmap_width,
+        )
+        sys.exit(0)
+
+    if args.overview:
+        markitdown.write_overview(
+            args.overview,
+            output=args.output,
+            terminal_width=args.overview_width,
         )
         sys.exit(0)
 

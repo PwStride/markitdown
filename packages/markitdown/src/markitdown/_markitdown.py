@@ -1274,3 +1274,80 @@ class MarkItDown:
         result = self.generate_heatmap(directory, terminal_width=terminal_width)
         writer = HeatmapWriter()
         return writer.write(result, output, terminal_width=terminal_width)
+
+    def generate_overview(
+        self,
+        directory: Union[str, Path],
+        *,
+        terminal_width: int = 80,
+    ) -> "OverviewResult":
+        """Generate a combined overview for every file in *directory*.
+
+        Orchestrates all four directory-level features (document maps,
+        directory preview, keyword index, and heatmap) into a single
+        combined result containing tree maps, one-sentence summaries,
+        keywords, and volume tiles.
+
+        The scan is non-recursive: only files sitting directly inside
+        *directory* are included.
+
+        Args:
+            directory: Path to the directory to scan.
+            terminal_width: Target character width for heatmap tiles.
+
+        Returns:
+            An OverviewResult instance.
+
+        Raises:
+            FileNotFoundError: If *directory* does not exist.
+            NotADirectoryError: If *directory* is not a directory.
+        """
+        from ._overview import OverviewScanner
+        scanner = OverviewScanner(self)
+        return scanner.scan(str(directory), terminal_width=terminal_width)
+
+    def write_overview(
+        self,
+        directory: Union[str, Path],
+        output: Union[str, None] = None,
+        *,
+        terminal_width: int = 80,
+    ) -> str:
+        """Generate a directory overview and write it to a destination.
+
+        Convenience wrapper combining ``generate_overview`` and
+        ``OverviewWriter`` into a single call.
+
+        The overview document contains four sections:
+
+        1. **Document Summaries** -- one-sentence subject per file
+        2. **Tree Maps** -- hierarchical heading structure per file
+        3. **Keyword Index** -- alphabetical keyword listing
+        4. **Volume Heatmap** -- size-proportional coloured tile grid
+
+        Equivalent CLI usage::
+
+            markitdown --overview ~/Documents
+            markitdown --overview ~/Documents -o overview.txt
+            markitdown --overview ~/Documents --overview-width 120
+
+        Python API usage::
+
+            md = MarkItDown()
+            md.write_overview("~/Documents")
+            md.write_overview("~/Documents", "overview.txt")
+
+        Args:
+            directory: Path to the directory to scan.
+            output: Where to write the overview.
+                - A file path (str) -- writes to that file.
+                - ``None`` -- writes to stdout.
+            terminal_width: Target character width for heatmap tiles.
+
+        Returns:
+            The rendered string.
+        """
+        from ._overview import OverviewWriter
+        result = self.generate_overview(directory, terminal_width=terminal_width)
+        writer = OverviewWriter()
+        return writer.write(result, output, terminal_width=terminal_width)

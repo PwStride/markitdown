@@ -27,6 +27,7 @@ from ._preview_style import STYLE_CLASSIC, STYLE_MONO, STYLE_TREE, DEFAULT_STYLE
 from ._dir_preview import DirectoryPreviewResult, FilePreviewEntry, DirectoryPreviewScanner, DirectoryPreviewWriter, CONVERTIBLE_EXTENSIONS
 from ._search import SearchResult, DocumentSearcher, SearchResultWriter
 from ._index import IndexResult, IndexEntry, IndexFileRef, DirectoryIndexBuilder, IndexWriter
+from ._heatmap import HeatmapEntry, HeatmapResult, HeatmapScanner, HeatmapWriter
 
 __all__ = [
     "__version__",
@@ -71,4 +72,8 @@ __all__ = [
     "IndexFileRef",
     "DirectoryIndexBuilder",
     "IndexWriter",
+    "HeatmapEntry",
+    "HeatmapResult",
+    "HeatmapScanner",
+    "HeatmapWriter",
 ]

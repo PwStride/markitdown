@@ -101,6 +101,12 @@ def main():
                 markitdown --index ~/Documents -o index.txt
                 markitdown --index ~/Documents --index-format json -o index.json
 
+            GENERATE DIRECTORY HEATMAP (size-proportional visual tile map):
+
+                markitdown --heatmap ~/Documents
+                markitdown --heatmap ~/Documents -o heatmap.txt
+                markitdown --heatmap ~/Documents --heatmap-width 120
+
             EXCLUDE SECTIONS FROM OUTPUT:
 
                 markitdown example.txt -o output.md --exclude "Section 1" --exclude "Chapter 2"
@@ -246,6 +252,25 @@ def main():
              "alphabetical index; 'json' produces a machine-readable dump.",
     )
 
+    parser.add_argument(
+        "--heatmap",
+        metavar="DIRECTORY",
+        help="Scan a directory and display a size-proportional heatmap showing "
+             "every file as a coloured square tile. Tile area is proportional to "
+             "file size in bytes. Heat colour ranges from cool blue (small) through "
+             "orange (medium) to crimson (large). All files are included regardless "
+             "of type. Writes to stdout unless -o is specified.",
+    )
+
+    parser.add_argument(
+        "--heatmap-width",
+        type=int,
+        default=80,
+        metavar="COLS",
+        help="Target terminal width in columns for the heatmap layout (default: 80). "
+             "Increase this value on wider terminals for larger tiles.",
+    )
+
     parser.add_argument("filename", nargs="?")
     args = parser.parse_args()
 
@@ -373,6 +398,14 @@ def main():
             args.index,
             output=args.output,
             fmt=args.index_format,
+        )
+        sys.exit(0)
+
+    if args.heatmap:
+        markitdown.write_heatmap(
+            args.heatmap,
+            output=args.output,
+            terminal_width=args.heatmap_width,
         )
         sys.exit(0)
 

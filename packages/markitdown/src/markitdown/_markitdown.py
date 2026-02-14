@@ -52,6 +52,7 @@ from ._docx_tree_mapper_writer import DocxTreeMapWriter
 from ._dir_preview import DirectoryPreviewResult, DirectoryPreviewScanner, DirectoryPreviewWriter
 from ._search import SearchResult, DocumentSearcher, SearchResultWriter
 from ._index import IndexResult, DirectoryIndexBuilder, IndexWriter
+from ._heatmap import HeatmapResult, HeatmapScanner, HeatmapWriter
 
 from ._exceptions import (
     FileConversionException,
@@ -1203,3 +1204,73 @@ class MarkItDown:
         result = self.generate_index(directory)
         writer = IndexWriter()
         return writer.write(result, output, fmt=fmt)
+
+    def generate_heatmap(
+        self,
+        directory: Union[str, Path],
+        *,
+        terminal_width: int = 80,
+    ) -> HeatmapResult:
+        """Scan a directory and generate a size-proportional heatmap.
+
+        Each file is represented as a square tile whose area is proportional
+        to the file's size in bytes.  No file content is read; only
+        ``os.stat()`` is called.  All files in the directory are included,
+        not just convertible documents.
+
+        The scan is non-recursive: only files sitting directly inside
+        *directory* are included.
+
+        Args:
+            directory: Path to the directory to scan.
+            terminal_width: Target character width for the rendered output.
+                Tile sizes are scaled so the largest tile fits within this
+                width.  Defaults to 80.
+
+        Returns:
+            A :class:`HeatmapResult` instance.
+
+        Raises:
+            FileNotFoundError: If *directory* does not exist.
+            NotADirectoryError: If *directory* is not a directory.
+        """
+        scanner = HeatmapScanner()
+        return scanner.scan(str(directory), terminal_width=terminal_width)
+
+    def write_heatmap(
+        self,
+        directory: Union[str, Path],
+        output: Union[str, None] = None,
+        *,
+        terminal_width: int = 80,
+    ) -> str:
+        """Generate a heatmap and write it to a destination.
+
+        Convenience wrapper combining :meth:`generate_heatmap` and
+        :class:`HeatmapWriter` into a single call.
+
+        Equivalent CLI usage::
+
+            markitdown --heatmap ~/Documents
+            markitdown --heatmap ~/Documents -o heatmap.txt
+            markitdown --heatmap ~/Documents --heatmap-width 120
+
+        Python API usage::
+
+            md = MarkItDown()
+            md.write_heatmap("~/Documents")
+            md.write_heatmap("~/Documents", "heatmap.txt")
+
+        Args:
+            directory: Path to the directory to scan.
+            output: Where to write the heatmap.
+                - A file path (str) — writes to that file.
+                - ``None`` — writes to stdout.
+            terminal_width: Target character width for tile sizing.
+
+        Returns:
+            The rendered string.
+        """
+        result = self.generate_heatmap(directory, terminal_width=terminal_width)
+        writer = HeatmapWriter()
+        return writer.write(result, output, terminal_width=terminal_width)
